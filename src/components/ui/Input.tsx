@@ -14,7 +14,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className='relative'>
         {label && (
           <label
-            htmlFor={props.type}
+            htmlFor={props.id}
             className='text-xs font-normal text-darkGrey'
           >
             {label}

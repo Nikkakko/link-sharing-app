@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import React from 'react';
 import { iconemail, iconpassword } from '../../../../public/assets/images';
-import Image from 'next/image';
 
 const LoginPage = () => {
   const [email, setEmail] = React.useState('');

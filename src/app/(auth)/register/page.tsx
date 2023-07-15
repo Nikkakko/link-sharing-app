@@ -1,7 +1,89 @@
+'use client';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import React from 'react';
+import { iconemail, iconpassword } from '../../../../public/assets/images';
 
-const RegisterPage = () => {
-  return <div>RegisterPage</div>;
+const LoginPage = () => {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  return (
+    <div className=''>
+      <div className='flex flex-col gap2'>
+        <h1 className='text-darkGrey text-2xl font-bold'>Create account</h1>
+        <p className='text-customGrey text-base font-normal leading-normal'>
+          Let’s get you started sharing your links!
+        </p>
+      </div>
+
+      <form
+        className='flex flex-col gap-6 mt-6'
+        onSubmit={e => {
+          e.preventDefault();
+          console.log(e);
+        }}
+      >
+        <div>
+          <Input
+            type='email'
+            id='email'
+            placeholder='e.g. alex@email.com'
+            className='w-full px-10'
+            label='Email address'
+            icon={iconemail}
+          />
+        </div>
+
+        <div>
+          <Input
+            type='password'
+            id='password'
+            placeholder='Enter your password'
+            className='w-full px-10'
+            label='Password'
+            icon={iconpassword}
+          />
+        </div>
+
+        <div>
+          <Input
+            type='password'
+            id='confirm-password'
+            placeholder='Confirm your password'
+            className='w-full px-10'
+            label='Confirm password'
+            icon={iconpassword}
+          />
+        </div>
+
+        <p className='text-darkGrey text-xs leading-4'>
+          Password must contain at least 8 characters
+        </p>
+        <Button
+          variant='primary'
+          size='sm'
+          className='w-full font-semibold text-base'
+        >
+          Create new account
+        </Button>
+
+        <div className='flex flex-col items-center'>
+          <p className='text-customGrey text-base font-normal leading-normal'>
+            Already have an account?
+          </p>
+          <Button
+            variant='link'
+            size='sm'
+            className='w-full font-semibold'
+            href='/login'
+          >
+            Login
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
-export default RegisterPage;
+export default LoginPage;
