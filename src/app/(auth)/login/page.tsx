@@ -8,6 +8,16 @@ const LoginPage = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+  };
+
   return (
     <div className=''>
       <div className='flex flex-col gap2'>
@@ -17,13 +27,7 @@ const LoginPage = () => {
         </p>
       </div>
 
-      <form
-        className='flex flex-col gap-6 mt-6'
-        onSubmit={e => {
-          e.preventDefault();
-          console.log(e);
-        }}
-      >
+      <form className='flex flex-col gap-6 mt-6' onSubmit={handleSubmit}>
         <div>
           <Input
             type='email'
@@ -32,6 +36,8 @@ const LoginPage = () => {
             className='w-full px-10'
             label='Email address'
             icon={iconemail}
+            value={email}
+            onChange={e => setEmail(e.target.value)}
           />
         </div>
 
@@ -43,6 +49,8 @@ const LoginPage = () => {
             className='w-full px-10'
             label='Password'
             icon={iconpassword}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
           />
         </div>
         <Button

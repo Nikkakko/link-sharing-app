@@ -1,12 +1,41 @@
 'use client';
+import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import React from 'react';
 import { iconemail, iconpassword } from '../../../../public/assets/images';
 
 const LoginPage = () => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+
+    const data = {
+      email: form.get('email') as string,
+      username: form.get('username') as string,
+      password: form.get('password') as string,
+      confirmPassword: form.get('confirm-password') as string,
+    };
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: data.email,
+          username: data.username,
+          password: data.password,
+          confirmPassword: data.confirmPassword,
+        }),
+      });
+
+      if (response.ok) {
+        const { token } = await response.json();
+        localStorage.setItem('token', token);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className=''>
@@ -17,17 +46,12 @@ const LoginPage = () => {
         </p>
       </div>
 
-      <form
-        className='flex flex-col gap-6 mt-6'
-        onSubmit={e => {
-          e.preventDefault();
-          console.log(e);
-        }}
-      >
+      <form className='flex flex-col gap-6 mt-6' onSubmit={handleSubmit}>
         <div>
           <Input
             type='email'
             id='email'
+            name='email'
             placeholder='e.g. alex@email.com'
             className='w-full px-10'
             label='Email address'
@@ -37,8 +61,21 @@ const LoginPage = () => {
 
         <div>
           <Input
+            type='text'
+            id='username'
+            name='username'
+            placeholder='Enter your name'
+            className='w-full px-10'
+            label='Username'
+            icon={iconemail}
+          />
+        </div>
+
+        <div>
+          <Input
             type='password'
             id='password'
+            name='password'
             placeholder='Enter your password'
             className='w-full px-10'
             label='Password'
@@ -50,6 +87,7 @@ const LoginPage = () => {
           <Input
             type='password'
             id='confirm-password'
+            name='confirm-password'
             placeholder='Confirm your password'
             className='w-full px-10'
             label='Confirm password'
@@ -64,6 +102,7 @@ const LoginPage = () => {
           variant='primary'
           size='sm'
           className='w-full font-semibold text-base'
+          type='submit'
         >
           Create new account
         </Button>
