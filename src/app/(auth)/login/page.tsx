@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import React from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { iconemail, iconpassword } from '../../../../public/assets/images';
 import { useRouter } from 'next/navigation';
 

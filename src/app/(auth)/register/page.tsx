@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { iconemail, iconpassword } from '../../../../public/assets/images';
 import axios from 'axios';
+import { signIn } from 'next-auth/react';
+
 import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
@@ -23,7 +25,13 @@ const LoginPage = () => {
       const response = await axios.post('/api/register', data);
 
       if (response.status === 200) {
-        router.push('/');
+        //sign in the user if response is successful
+        await signIn('credentials', {
+          email: data.email,
+          password: data.password,
+          callbackUrl: '/',
+          redirect: true,
+        });
       }
     } catch (error) {
       console.log(error);
