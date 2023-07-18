@@ -3,8 +3,11 @@ import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { iconemail, iconpassword } from '../../../../public/assets/images';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
@@ -17,23 +20,13 @@ const LoginPage = () => {
     };
 
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: data.email,
-          username: data.username,
-          password: data.password,
-          confirmPassword: data.confirmPassword,
-        }),
-      });
+      const response = await axios.post('/api/register', data);
 
-      if (response.ok) {
-        const { token } = await response.json();
-        localStorage.setItem('token', token);
+      if (response.status === 200) {
+        router.push('/');
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 

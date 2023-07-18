@@ -2,20 +2,32 @@
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import React from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { iconemail, iconpassword } from '../../../../public/assets/images';
+import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
+    const form = new FormData(e.currentTarget);
 
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const data = {
+      email: form.get('email') as string,
+      password: form.get('password') as string,
+    };
+
+    try {
+      await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        callbackUrl: '/',
+        redirect: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -32,12 +44,11 @@ const LoginPage = () => {
           <Input
             type='email'
             id='email'
+            name='email'
             placeholder='e.g. alex@email.com'
             className='w-full px-10'
             label='Email address'
             icon={iconemail}
-            value={email}
-            onChange={e => setEmail(e.target.value)}
           />
         </div>
 
@@ -45,12 +56,11 @@ const LoginPage = () => {
           <Input
             type='password'
             id='password'
+            name='password'
             placeholder='Enter your password'
             className='w-full px-10'
             label='Password'
             icon={iconpassword}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
           />
         </div>
         <Button
