@@ -68,6 +68,7 @@ const LoginPage = () => {
             placeholder='Enter your name'
             className='w-full px-10'
             label='Username'
+            autoComplete='username'
             icon={iconemail}
           />
         </div>
@@ -80,6 +81,7 @@ const LoginPage = () => {
             placeholder='Enter your password'
             className='w-full px-10'
             label='Password'
+            autoComplete='new-password'
             icon={iconpassword}
           />
         </div>
@@ -92,6 +94,7 @@ const LoginPage = () => {
             placeholder='Confirm your password'
             className='w-full px-10'
             label='Confirm password'
+            autoComplete='new-password'
             icon={iconpassword}
           />
         </div>

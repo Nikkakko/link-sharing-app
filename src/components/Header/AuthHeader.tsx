@@ -1,8 +1,8 @@
 import React from 'react';
-import { devlinksLogoSmall, devlinks } from '../../public/assets/images';
+import { devlinksLogoSmall, devlinks } from '../../../public/assets/images';
 import Image from 'next/image';
 
-const Header = () => {
+const AuthHeader = () => {
   return (
     <div className='flex items-center gap-2'>
       <Image src={devlinksLogoSmall} alt='devlinks' />
@@ -11,4 +11,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default AuthHeader;

@@ -1,4 +1,4 @@
-import Header from '@/components/Header';
+import AuthHeader from '@/components/Header/AuthHeader';
 
 export default function AuthLayout({
   children, // will be a page or nested layout
@@ -7,8 +7,7 @@ export default function AuthLayout({
 }) {
   return (
     <div className='p-8 w-screen h-screen'>
-      <Header />
-
+      <AuthHeader />
       <main className='mt-16 flex flex-col'>{children}</main>
     </div>
   );

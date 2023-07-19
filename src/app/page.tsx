@@ -8,8 +8,6 @@ export default function Home() {
   // const session = await getServerSession(authOptions);
   const { data: session } = useSession();
 
-  console.log(session?.user);
-
   // if (!session) {
   //   redirect('/login');
   // }

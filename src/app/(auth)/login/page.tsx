@@ -49,6 +49,7 @@ const LoginPage = () => {
             className='w-full px-10'
             label='Email address'
             icon={iconemail}
+            autoComplete='email'
           />
         </div>
 
@@ -60,6 +61,7 @@ const LoginPage = () => {
             placeholder='Enter your password'
             className='w-full px-10'
             label='Password'
+            autoComplete='current-password'
             icon={iconpassword}
           />
         </div>
