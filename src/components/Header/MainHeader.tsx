@@ -9,8 +9,8 @@ const MainHeader = () => {
   const router = useRouter();
 
   const activeClass = {
-    isActive: 'px-[27px] py-[11px] bg-violet-100 rounded-lg',
-    notActive: '',
+    isActive: 'px-[27px] py-[11px] bg-violet-100 rounded-lg cursor-pointer',
+    notActive: 'cursor-pointer',
   };
 
   const links = [

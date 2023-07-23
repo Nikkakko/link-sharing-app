@@ -4,11 +4,14 @@ import { Button } from '../ui/Button';
 import CustomizeBanner from './CustomizeBanner';
 import { useLinkStore } from '@/context/store';
 import NewLink from './NewLink';
+import Footer from '../Footer';
 
 const Customize = () => {
-  const { links, setLinks } = useLinkStore(state => state);
+  const { links, setLinks, updateLink } = useLinkStore(state => state);
 
-  console.log(links);
+  const handleSaveLink = (id: number, platform: string, url: string) => {
+    updateLink(id, platform, url);
+  };
 
   return (
     <div className='flex flex-col'>
@@ -22,15 +25,25 @@ const Customize = () => {
         </p>
       </div>
 
-      <Button
-        variant='outline'
-        className='rounded-lg mt-[40px]'
-        onClick={setLinks}
-      >
-        + Add New Link
-      </Button>
+      <div className='flex flex-col gap-6'>
+        <Button
+          variant='outline'
+          className='rounded-lg mt-[40px]'
+          onClick={setLinks}
+        >
+          + Add New Link
+        </Button>
 
-      {links.length > 0 ? <NewLink /> : <CustomizeBanner />}
+        {links.length > 0 ? (
+          <div className='flex flex-col gap-6'>
+            {links.map(link => (
+              <NewLink key={link.id} link={link} />
+            ))}
+          </div>
+        ) : (
+          <CustomizeBanner />
+        )}
+      </div>
     </div>
   );
 };

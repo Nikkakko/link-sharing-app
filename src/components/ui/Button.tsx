@@ -10,10 +10,9 @@ const buttonVariants = cva(
       variant: {
         default:
           'bg-slate-900 text-white hover:bg-slate-700 dark:bg-slate-50 dark:text-slate-900',
-        destructive:
-          'bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-600',
+
         outline:
-          'bg-transparent border border-violet-600 hover:bg-primaryHover text-primary',
+          'bg-transparent border border-violet-600 hover:bg-primaryHover hover:text-white text-primary',
         subtle:
           'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-100',
         ghost:
@@ -21,6 +20,8 @@ const buttonVariants = cva(
 
         link: 'bg-transparent text-primary hover:text-primaryHover dark:text-primary dark:hover:text-primaryHover',
         primary: 'bg-primary rounded-lg text-white hover:bg-primaryHover',
+        destructive:
+          'text-neutral-500 text-base font-normal leading-normal hover:text-primaryHover',
       },
       size: {
         default: 'h-10 py-2 px-4',

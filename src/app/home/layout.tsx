@@ -1,3 +1,4 @@
+import React from 'react';
 import Footer from '@/components/Footer';
 import MainHeader from '@/components/Header/MainHeader';
 
@@ -11,7 +12,6 @@ export default function HomeLayout({
       <MainHeader />
       <main className='p-4 flex flex-col flex-1'>
         {children}
-
         <Footer />
       </main>
     </div>

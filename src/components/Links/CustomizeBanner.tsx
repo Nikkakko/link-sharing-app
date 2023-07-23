@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const CustomizeBanner = () => {
   return (
-    <div className='mt-6 p-[20px] flex flex-col'>
+    <div className='p-[20px] flex flex-col'>
       <div className='flex flex-col gap-6 items-center '>
         <Image src={customizeImg} alt='customize banner' />
 
