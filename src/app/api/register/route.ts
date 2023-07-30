@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { NextRequest, NextResponse } from 'next/server';

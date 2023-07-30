@@ -63,19 +63,46 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    session({ session, token }) {
-      session.user.id = token.id;
-      session.user.username = token.username;
-      return session;
-    },
-    jwt({ token, account, user }) {
-      if (account) {
-        token.accessToken = account.access_token;
-        token.id = user.id;
-        token.username = (user as User).name;
-        console.log({ user });
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        return {
+          ...token,
+          id: user.id,
+          username: user.name,
+        };
       }
-      return token;
+
+      if (trigger === 'update' && session?.user.image) {
+        return {
+          ...token,
+          image: session.user.image,
+        };
+      }
+
+      //update the user in database
+      await db.user.update({
+        where: {
+          id: token.id as string,
+        },
+        data: {
+          image: token.image as string,
+        },
+      });
+
+      return { ...token, ...session?.user };
+    },
+
+    async session({ session, token }) {
+      // console.log('session', session);
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          username: token.username,
+          image: token.image,
+        },
+      };
     },
   },
 

@@ -10,6 +10,7 @@ export default function HomeLayout({
   return (
     <div className=' flex flex-col w-screen h-screen bg-neutral-50'>
       <MainHeader />
+
       <main className='p-4 flex flex-col flex-1'>
         {children}
         <Footer />

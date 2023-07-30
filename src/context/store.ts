@@ -15,12 +15,18 @@ export interface LinkStore {
 
 export interface ProfileStore {
   user: {
-    id: number | null;
     firstName: string;
     lastName: string;
     email: string;
-    image: string;
+    image: string | ArrayBuffer | null;
   };
+
+  setUser: (
+    firstName: string,
+    lastName: string,
+    email: string,
+    image: string
+  ) => void;
 }
 
 export const useLinkStore = create<LinkStore>(set => ({
@@ -59,10 +65,26 @@ export const useLinkStore = create<LinkStore>(set => ({
 
 export const useProfileStore = create<ProfileStore>(set => ({
   user: {
-    id: null,
     firstName: '',
     lastName: '',
     email: '',
     image: '',
+  },
+
+  setUser: (
+    firstName: string,
+    lastName: string,
+    email: string,
+    image: string
+  ) => {
+    set(state => ({
+      user: {
+        ...state.user,
+        firstName,
+        lastName,
+        email,
+        image,
+      },
+    }));
   },
 }));
