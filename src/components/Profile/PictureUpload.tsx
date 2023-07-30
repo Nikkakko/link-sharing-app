@@ -8,8 +8,6 @@ import { uploadImage, deleteImage } from '@/utils/cloudinary';
 import { Button } from '../ui/Button';
 import { DeleteIcon } from 'lucide-react';
 
-import { Cloudinary } from '@cloudinary/url-gen';
-
 const PictureUpload = () => {
   const { data: session, update: sessionUpdate } = useSession();
 
@@ -19,7 +17,6 @@ const PictureUpload = () => {
     };
 
     const url = await uploadImage(target.files[0]);
-    console.log(url);
 
     await sessionUpdate({
       ...session,
@@ -31,8 +28,6 @@ const PictureUpload = () => {
   };
 
   const handleRemoveImage = async () => {
-    // remove by asset id
-
     await sessionUpdate({
       ...session,
       user: {

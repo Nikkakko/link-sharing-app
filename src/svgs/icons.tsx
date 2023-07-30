@@ -64,6 +64,7 @@ export const ProfileIcon = (props: React.SVGProps<SVGSVGElement>) => {
       height='20'
       fill='none'
       viewBox='0 0 21 20'
+      {...props}
     >
       <path
         fill={props.fill || '#737373'}
