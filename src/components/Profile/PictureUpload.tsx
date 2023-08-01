@@ -38,20 +38,21 @@ const PictureUpload = () => {
   };
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col '>
       <h1 className='text-neutral-500 text-base font-normal leading-normal'>
         Profile Picture
       </h1>
 
       {!session?.user?.image && (
-        <div className='w-[193px] h-[193px] bg-lightPurple rounded-xl justify-center items-center inline-flex mt-4'>
-          <div className='flex items-center flex-col gap-2 relative'>
+        <div className='w-[193px] h-[193px] bg-lightPurple rounded-xl justify-center items-center inline-flex mt-4 relative'>
+          <div
+            className='flex items-center flex-col gap-2 
+          '
+          >
             <UploadImageIcon />
             <Input
               type='file'
-              className='
-            absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer border border-red-500 rounded-lg
-            '
+              className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[193px] h-[193px] opacity-0 border-red-500 cursor-pointer rounded-lg'
               id='file-upload'
               name='file'
               onChange={handleFileUpload}

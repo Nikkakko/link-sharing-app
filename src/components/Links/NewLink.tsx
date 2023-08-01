@@ -34,6 +34,16 @@ const NewLink = ({ link }: Props) => {
     url: link.url,
   });
 
+  useEffect(() => {
+    //set delay to 1 second
+
+    const delayDebounceFn = setTimeout(() => {
+      updateLink(link.id, updatedLink.platform, updatedLink.url);
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [updatedLink]);
+
   return (
     <div className='p-5 bg-neutral-50 rounded-xl border flex-col justify-center items-center gap-3 inline-flex '>
       <div className='flex flex-col items-start gap-4 w-full '>
@@ -49,7 +59,7 @@ const NewLink = ({ link }: Props) => {
             className='p-0 h-6'
             onClick={() => removeLink(link.id)}
           >
-            Remove
+            Delete
           </Button>
         </div>
 
@@ -81,16 +91,11 @@ const NewLink = ({ link }: Props) => {
                     key={item.id}
                     className={`flex items-center gap-2 cursor-pointer hover:bg-neutral-100 p-2 rounded-md`}
                     onSelect={() => {
-                      setUpdatedLink({
-                        ...updatedLink,
-                        platform: item.title,
-                      });
+                      setUpdatedLink({ ...updatedLink, platform: item.title });
                     }}
                   >
                     {item.icon}
-                    <DropdownMenuLabel className=''>
-                      {item.title}
-                    </DropdownMenuLabel>
+                    <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

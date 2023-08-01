@@ -1,17 +1,19 @@
 'use client';
 
-import { useProfileStore } from '@/context/store';
+import { useLinkStore, useProfileStore } from '@/context/store';
 import { ProfileIcon } from '@/svgs/icons';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
+import ReviewCard from './ReviewCard';
 
 const UserReview = () => {
   const { data: session } = useSession();
   const { profileInfo } = useProfileStore();
+  const { links } = useLinkStore();
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col w-[237px] mx-auto'>
       <div className='flex flex-col items-center text-center'>
         {session?.user?.image ? (
           <Image
@@ -36,6 +38,12 @@ const UserReview = () => {
           </h1>
           <p className='text-sm text-neutral-500'>{profileInfo.email}</p>
         </div>
+      </div>
+
+      <div className='mt-12 flex flex-col gap-5'>
+        {links?.map(link => (
+          <ReviewCard link={link} key={link.id} />
+        ))}
       </div>
     </div>
   );
