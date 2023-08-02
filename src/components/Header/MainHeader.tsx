@@ -16,8 +16,8 @@ const MainHeader = () => {
   const isPreview = pathname === '/home/preview';
 
   const activeClass = {
-    isActive: 'px-[27px] py-[11px] bg-violet-100 rounded-lg cursor-pointer',
-    notActive: 'cursor-pointer ',
+    isActive: 'w-[74px] h-[42px] bg-violet-100 rounded-lg cursor-pointer   ',
+    notActive: 'cursor-pointer w-[74px] h-[42px]     ',
   };
 
   const links = [
@@ -71,17 +71,18 @@ const MainHeader = () => {
       ) : (
         <div className='flex items-center justify-between'>
           {links.map((link, index) => (
-            <div key={index} className='flex items-center'>
-              <div
-                className={`${
-                  pathname === link.url
-                    ? activeClass.isActive
-                    : activeClass.notActive
-                }`}
-                onClick={() => router.push(link.url)}
-              >
-                {link.icon}
-              </div>
+            <div
+              key={link.id}
+              className={`${
+                pathname === link.url
+                  ? activeClass.isActive
+                  : activeClass.notActive
+              }
+              flex items-center justify-center 
+              `}
+              onClick={() => router.push(link.url)}
+            >
+              {link.icon}
             </div>
           ))}
         </div>

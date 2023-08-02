@@ -4,14 +4,9 @@ import { Button } from '../ui/Button';
 import CustomizeBanner from './CustomizeBanner';
 import { useLinkStore } from '@/context/store';
 import NewLink from './NewLink';
-import Footer from '../Footer';
 
 const Customize = () => {
   const { links, setLinks, updateLink } = useLinkStore(state => state);
-
-  const handleSaveLink = (id: number, platform: string, url: string) => {
-    updateLink(id, platform, url);
-  };
 
   return (
     <div className='flex flex-col'>

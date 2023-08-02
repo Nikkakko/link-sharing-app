@@ -1,6 +1,11 @@
 'use client';
 import { ChevronDownIcon, DragAndDropIcon } from '@/svgs/icons';
-import React, { ReactElement, useEffect } from 'react';
+import React, {
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+  useContext,
+} from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { useLinkStore } from '@/context/store';
@@ -12,9 +17,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { dropDownMenuList } from '@/utils/links';
-import { DropdownMenuArrow } from '@radix-ui/react-dropdown-menu';
-import Footer from '../Footer';
+import { listArray } from '@/utils/links';
+import { RefContext } from '@/context/RefContext';
 
 type linkProps = {
   id: number;
@@ -33,16 +37,16 @@ const NewLink = ({ link }: Props) => {
     platform: link.platform,
     url: link.url,
   });
+  const { newLinkRef } = useContext(RefContext);
 
-  useEffect(() => {
-    //set delay to 1 second
-
-    const delayDebounceFn = setTimeout(() => {
+  //use useImperativeHandle to expose a function to parent component
+  useImperativeHandle(newLinkRef, () => ({
+    handleUpdate: () => {
       updateLink(link.id, updatedLink.platform, updatedLink.url);
-    }, 1000);
+    },
+  }));
 
-    return () => clearTimeout(delayDebounceFn);
-  }, [updatedLink]);
+  console.log(links);
 
   return (
     <div className='p-5 bg-neutral-50 rounded-xl border flex-col justify-center items-center gap-3 inline-flex '>
@@ -71,7 +75,7 @@ const NewLink = ({ link }: Props) => {
             <DropdownMenu>
               <DropdownMenuLabel>
                 <div className='flex items-center gap-2'>
-                  {dropDownMenuList.map(item => {
+                  {listArray.map(item => {
                     if (item.title === updatedLink.platform) {
                       return item.icon;
                     }
@@ -86,7 +90,7 @@ const NewLink = ({ link }: Props) => {
                 <ChevronDownIcon />
               </DropdownMenuTrigger>
               <DropdownMenuContent className=''>
-                {dropDownMenuList.map(item => (
+                {listArray.map(item => (
                   <DropdownMenuItem
                     key={item.id}
                     className={`flex items-center gap-2 cursor-pointer hover:bg-neutral-100 p-2 rounded-md`}
