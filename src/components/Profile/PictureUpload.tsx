@@ -75,6 +75,7 @@ const PictureUpload = () => {
             width={193}
             height={193}
             className='rounded-xl'
+            priority
             alt='Profile Picture'
           />
 

@@ -1,24 +1,13 @@
 'use client';
 import { ChevronDownIcon, DragAndDropIcon } from '@/svgs/icons';
-import React, {
-  useEffect,
-  useImperativeHandle,
-  forwardRef,
-  useContext,
-} from 'react';
+import React, { useImperativeHandle, useContext } from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { useLinkStore } from '@/context/store';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
 import { listArray } from '@/utils/links';
 import { RefContext } from '@/context/RefContext';
+import DropdownMenu from '../ui/DropdownMenu';
 
 type linkProps = {
   id: number;
@@ -37,6 +26,8 @@ const NewLink = ({ link }: Props) => {
     platform: link.platform,
     url: link.url,
   });
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+
   const { newLinkRef } = useContext(RefContext);
 
   //use useImperativeHandle to expose a function to parent component
@@ -46,10 +37,8 @@ const NewLink = ({ link }: Props) => {
     },
   }));
 
-  console.log(links);
-
   return (
-    <div className='p-5 bg-neutral-50 rounded-xl border flex-col justify-center items-center gap-3 inline-flex '>
+    <div className='p-5 bg-neutral-50 rounded-xl border flex-col justify-center items-center gap-3 inline-flex'>
       <div className='flex flex-col items-start gap-4 w-full '>
         <div className='flex items-center justify-between w-full '>
           <div className='flex items-center gap-2'>
@@ -71,40 +60,26 @@ const NewLink = ({ link }: Props) => {
           <label className='text-darkGrey text-xs font-normal leading-[18px]'>
             Platform
           </label>
-          <div className='w-[255px] h-12 px-4 py-3 bg-white rounded-lg border border-zinc-300 flex justify-between items-center gap-3  relative'>
-            <DropdownMenu>
-              <DropdownMenuLabel>
-                <div className='flex items-center gap-2'>
-                  {listArray.map(item => {
-                    if (item.title === updatedLink.platform) {
-                      return item.icon;
-                    }
-                  })}
-                  <span className='text-darkGrey text-sm font-normal leading-[18px]'>
-                    {updatedLink.platform}
-                  </span>
-                </div>
-              </DropdownMenuLabel>
+          <div className='w-[255px] h-12 px-4 py-3 bg-white rounded-lg border border-zinc-300 flex justify-between items-center gap-3 '>
+            <div className='flex items-center gap-2'>
+              {
+                listArray.find(item => item.title === updatedLink.platform)
+                  ?.icon
+              }
+              {updatedLink.platform}
+            </div>
 
-              <DropdownMenuTrigger>
-                <ChevronDownIcon />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className=''>
-                {listArray.map(item => (
-                  <DropdownMenuItem
-                    key={item.id}
-                    className={`flex items-center gap-2 cursor-pointer hover:bg-neutral-100 p-2 rounded-md`}
-                    onSelect={() => {
-                      setUpdatedLink({ ...updatedLink, platform: item.title });
-                    }}
-                  >
-                    {item.icon}
-                    <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ChevronDownIcon
+              className={`${isDropdownOpen ? 'transform rotate-180' : ''}`}
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            />
           </div>
+          {isDropdownOpen && (
+            <DropdownMenu
+              setUpdatedLink={setUpdatedLink}
+              closeDropdown={() => setIsDropdownOpen(false)}
+            />
+          )}
         </div>
         <div>
           <label className='text-darkGrey text-xs font-normal leading-[18px]'>
@@ -116,7 +91,7 @@ const NewLink = ({ link }: Props) => {
             value={updatedLink.url}
             name='url'
             onChange={e => {
-              setUpdatedLink({ ...updatedLink, url: e.target.value });
+              setUpdatedLink(prev => ({ ...prev, url: e.target.value }));
             }}
           />
         </div>

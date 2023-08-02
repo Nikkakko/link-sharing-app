@@ -21,6 +21,8 @@ const UserReview = () => {
             alt='user profile'
             width={104}
             height={104}
+            blurDataURL={session?.user?.image as string}
+            priority
             className='rounded-full border-2 border-violet-600 w-[104px] h-[104px]
         object-fill object-center'
           />
