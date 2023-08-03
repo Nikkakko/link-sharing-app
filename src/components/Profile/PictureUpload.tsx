@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { uploadImage, deleteImage } from '@/utils/cloudinary';
 import { Button } from '../ui/Button';
-import { DeleteIcon } from 'lucide-react';
+import { DeleteIcon, Upload } from 'lucide-react';
 
 const PictureUpload = () => {
   const { data: session, update: sessionUpdate } = useSession();
@@ -52,11 +52,11 @@ const PictureUpload = () => {
             <UploadImageIcon />
             <Input
               type='file'
-              className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[193px] h-[193px] opacity-0 border-red-500 cursor-pointer rounded-lg'
               id='file-upload'
               name='file'
               onChange={handleFileUpload}
               accept='image/png, image/jpeg'
+              className='absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer'
             />
             <label
               className='text-primary text-sm font-semibold leading-normal text-center'
@@ -69,25 +69,37 @@ const PictureUpload = () => {
       )}
 
       {session?.user?.image && (
-        <div className='relative'>
+        <div className='relative max-w-fit'>
           <Image
             src={session.user.image}
             width={193}
             height={193}
-            className='rounded-xl'
+            className='rounded-md'
             priority
             alt='Profile Picture'
           />
 
-          {/* add remove icon */}
-
-          <Button
-            className='absolute top-0 right-0'
-            onClick={handleRemoveImage}
-            variant='destructive'
+          <div
+            className='flex items-center justify-center flex-col gap-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer w-full h-full bg-black bg-opacity-50 rounded-md
+          '
           >
-            <DeleteIcon size={24} />
-          </Button>
+            <UploadImageIcon fill='#fff' />
+            <label
+              className='text-white text-base font-semibold leading-normal text-center'
+              htmlFor='file-upload'
+            >
+              Change Image
+            </label>
+
+            <Input
+              type='file'
+              id='file-upload'
+              name='file'
+              onChange={handleFileUpload}
+              accept='image/png, image/jpeg'
+              className='absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer'
+            />
+          </div>
         </div>
       )}
 

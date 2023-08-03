@@ -27,6 +27,7 @@ const NewLink = ({ link }: Props) => {
     url: link.url,
   });
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
 
   const { newLinkRef } = useContext(RefContext);
 
@@ -37,8 +38,18 @@ const NewLink = ({ link }: Props) => {
     },
   }));
 
+  //close dropdown when clicked outside
+  const handleClickOutside = (e: any) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
   return (
-    <div className='p-5 bg-neutral-50 rounded-xl border flex-col justify-center items-center gap-3 inline-flex'>
+    <div
+      className='p-5 bg-neutral-50 rounded-xl border flex-col justify-center items-center gap-3 inline-flex'
+      onClick={handleClickOutside}
+    >
       <div className='flex flex-col items-start gap-4 w-full '>
         <div className='flex items-center justify-between w-full '>
           <div className='flex items-center gap-2'>
@@ -52,15 +63,18 @@ const NewLink = ({ link }: Props) => {
             className='p-0 h-6'
             onClick={() => removeLink(link.id)}
           >
-            Delete
+            Remove
           </Button>
         </div>
 
-        <div className='flex flex-col items-start'>
+        <div className='flex flex-col items-start relative' ref={dropdownRef}>
           <label className='text-darkGrey text-xs font-normal leading-[18px]'>
             Platform
           </label>
-          <div className='w-[255px] h-12 px-4 py-3 bg-white rounded-lg border border-zinc-300 flex justify-between items-center gap-3 '>
+          <div
+            className='w-[255px] h-12 px-4 py-3 bg-white rounded-lg border border-zinc-300 flex justify-between items-center gap-3 '
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
             <div className='flex items-center gap-2'>
               {
                 listArray.find(item => item.title === updatedLink.platform)
@@ -70,7 +84,9 @@ const NewLink = ({ link }: Props) => {
             </div>
 
             <ChevronDownIcon
-              className={`${isDropdownOpen ? 'transform rotate-180' : ''}`}
+              className={`${
+                isDropdownOpen ? 'transform rotate-180' : ''
+              } cursor-pointer`}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             />
           </div>
