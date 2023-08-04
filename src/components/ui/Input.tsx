@@ -6,10 +6,11 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   icon?: string;
+  error?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, icon, ...props }, ref) => {
+  ({ className, label, icon, error, ...props }, ref) => {
     return (
       <div className='relative'>
         {label && (
@@ -28,12 +29,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         <input
           className={cn(
-            'h-12  bg-white rounded-lg border border-zinc-300 inline-flex placeholder:text-zinc-800/50 text-base font-normal leading-normal active:outline-primary focus:outline-primary focus:caret-primary',
+            error ? 'border-red-500' : 'border-zinc-300',
+            'h-12  bg-white rounded-lg border inline-flex placeholder:text-zinc-800/50 text-base font-normal leading-normal active:outline-primary focus:outline-primary focus:caret-primary',
             className
           )}
           ref={ref}
           {...props}
         />
+
+        {error && (
+          <p className='text-xs font-normal text-red-500 mt-1'>{error}</p>
+        )}
       </div>
     );
   }

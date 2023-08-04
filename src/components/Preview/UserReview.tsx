@@ -31,14 +31,23 @@ const UserReview = () => {
         )}
 
         <div className='mt-[25px] flex flex-col gap-2'>
-          <h1
-            className='text-darkGrey text-[32px] font-bold leading-[48px] capitalize 
+          {profileInfo?.firstName && profileInfo.lastName ? (
+            <>
+              <h1
+                className='text-darkGrey text-[32px] font-bold leading-[48px] capitalize 
             max-w-[250px] 
-          '
-          >
-            {profileInfo.firstName} {profileInfo.lastName}
-          </h1>
-          <p className='text-sm text-neutral-500'>{profileInfo.email}</p>
+            '
+              >
+                {profileInfo.firstName} {profileInfo.lastName}
+              </h1>
+              <p className='text-sm text-neutral-500'>{profileInfo.email}</p>
+            </>
+          ) : (
+            <div className='flex flex-col items-center'>
+              <div className='w-[173px] h-[30px] bg-customGrey/50 rounded-md justify-center items-center inline-flex mt-4 relative' />
+              <div className='w-[140px] h-[24px] bg-customGrey/50 rounded-md justify-center items-center inline-flex mt-4 relative' />
+            </div>
+          )}
         </div>
       </div>
 

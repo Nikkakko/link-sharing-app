@@ -4,10 +4,15 @@ import React, { useImperativeHandle, useContext } from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { useLinkStore } from '@/context/store';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
 import { listArray } from '@/utils/links';
 import { RefContext } from '@/context/RefContext';
 import DropdownMenu from '../ui/DropdownMenu';
+
+interface IFormInputs {
+  url: string;
+}
 
 type linkProps = {
   id: number;
@@ -28,13 +33,25 @@ const NewLink = ({ link }: Props) => {
   });
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInputs>({
+    defaultValues: {
+      url: link.url,
+    },
+  });
+  const onSubmit: SubmitHandler<IFormInputs> = data => {
+    updateLink(link.id, updatedLink.platform, data.url);
+  };
 
   const { newLinkRef } = useContext(RefContext);
 
   //use useImperativeHandle to expose a function to parent component
   useImperativeHandle(newLinkRef, () => ({
     handleUpdate: () => {
-      updateLink(link.id, updatedLink.platform, updatedLink.url);
+      handleSubmit(onSubmit)();
     },
   }));
 
@@ -97,20 +114,26 @@ const NewLink = ({ link }: Props) => {
             />
           )}
         </div>
-        <div>
+        <form>
           <label className='text-darkGrey text-xs font-normal leading-[18px]'>
             Link
           </label>
           <Input
             className='w-[255px] px-4 py-3 '
             placeholder='e.g. https://www.github.com/johnappleseed'
-            value={updatedLink.url}
-            name='url'
-            onChange={e => {
-              setUpdatedLink(prev => ({ ...prev, url: e.target.value }));
-            }}
+            {...register('url', {
+              required: {
+                value: true,
+                message: 'Can’t be empty',
+              },
+              pattern: {
+                value: /https?:\/\/[\w\-_]+(\.[\w\-_]+)+[/#?]?.*$/,
+                message: 'Please enter a valid URL',
+              },
+            })}
+            error={errors.url?.message}
           />
-        </div>
+        </form>
       </div>
     </div>
   );
