@@ -14,7 +14,7 @@ type Props = {
 };
 
 const ReviewCard = ({ link }: Props) => {
-  const { id, title, platform, url } = link;
+  const { platform, url } = link;
 
   const router = useRouter();
 

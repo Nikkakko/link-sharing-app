@@ -1,7 +1,5 @@
 'use client';
-
 import { useLinkStore, useProfileStore } from '@/context/store';
-import { ProfileIcon } from '@/svgs/icons';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
@@ -11,6 +9,28 @@ const UserReview = () => {
   const { data: session } = useSession();
   const { profileInfo } = useProfileStore();
   const { links } = useLinkStore();
+
+  const Skeleton = () => {
+    //animate skeleton loader
+    return (
+      <div
+        className='flex flex-col w-[237px] mx-auto
+      animate-pulse
+      '
+      >
+        <div className='flex flex-col items-center text-center'>
+          <div className='w-[250px] h-[32px] bg-customGrey/50 rounded-md justify-center items-center inline-flex mt-4 relative' />
+          <div className='w-[140px] h-[24px] bg-customGrey/50 rounded-md justify-center items-center inline-flex mt-4 relative' />
+        </div>
+      </div>
+    );
+  };
+
+  const ProfileImageSkeleton = () => {
+    return (
+      <div className='w-[104px] h-[104px] bg-customGrey/50 rounded-full justify-center items-center inline-flex mt-4 relative animate-pulse' />
+    );
+  };
 
   return (
     <div className='flex flex-col w-[237px] mx-auto'>
@@ -27,7 +47,7 @@ const UserReview = () => {
         object-fill object-center'
           />
         ) : (
-          <ProfileIcon className='w-[104px] h-[104px]' />
+          <ProfileImageSkeleton />
         )}
 
         <div className='mt-[25px] flex flex-col gap-2'>
@@ -43,10 +63,7 @@ const UserReview = () => {
               <p className='text-sm text-neutral-500'>{profileInfo.email}</p>
             </>
           ) : (
-            <div className='flex flex-col items-center'>
-              <div className='w-[173px] h-[30px] bg-customGrey/50 rounded-md justify-center items-center inline-flex mt-4 relative' />
-              <div className='w-[140px] h-[24px] bg-customGrey/50 rounded-md justify-center items-center inline-flex mt-4 relative' />
-            </div>
+            <Skeleton />
           )}
         </div>
       </div>

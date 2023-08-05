@@ -16,11 +16,10 @@ const MainHeader = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
 
+    //remove copied message after 3 seconds
     setTimeout(() => {
       setCopied(false);
     }, 3000);
-
-    //show toast
   };
 
   const isPreview = pathname === '/home/preview';
