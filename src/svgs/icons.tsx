@@ -82,6 +82,7 @@ export const DevlinksIcon = (props: React.SVGProps<SVGSVGElement>) => {
       height='32'
       fill='none'
       viewBox='0 0 32 32'
+      {...props}
     >
       <path
         fill='#633CFF'

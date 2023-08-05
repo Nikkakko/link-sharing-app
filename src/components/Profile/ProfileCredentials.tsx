@@ -4,6 +4,7 @@ import { Input } from '../ui/Input';
 import { useProfileStore } from '@/context/store';
 import { RefContext } from '@/context/RefContext';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { useSession } from 'next-auth/react';
 
 interface IFormInputs {
   firstName: string;
@@ -12,6 +13,7 @@ interface IFormInputs {
 }
 
 const ProfileCredentials = () => {
+  const { data: session, update } = useSession();
   const { setProfileInfo, profileInfo } = useProfileStore();
   const { profileRef } = useContext(RefContext);
   const {
@@ -22,7 +24,7 @@ const ProfileCredentials = () => {
     defaultValues: {
       firstName: '' || profileInfo.firstName,
       lastName: '' || profileInfo.lastName,
-      email: '' || profileInfo.email,
+      email: session?.user?.email,
     },
   });
 

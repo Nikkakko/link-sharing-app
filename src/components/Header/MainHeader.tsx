@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { LinkIcon, PreviewIcon, ProfileIcon, DevlinksIcon } from '@/svgs/icons';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
@@ -9,8 +9,18 @@ const MainHeader = () => {
   const pathname = usePathname();
   const router = useRouter();
 
+  const [copied, setCopied] = useState(false);
+
   const handleShareLink = () => {
-    console.log('share link');
+    //copy current url to clipboard
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
+
+    //show toast
   };
 
   const isPreview = pathname === '/home/preview';
@@ -65,7 +75,7 @@ const MainHeader = () => {
             variant='primary'
             onClick={handleShareLink}
           >
-            Share Link
+            {copied ? 'Copied!' : 'Share Link'}
           </Button>
         </div>
       ) : (
@@ -85,6 +95,30 @@ const MainHeader = () => {
               {link.icon}
             </div>
           ))}
+        </div>
+      )}
+
+      {copied && (
+        <div
+          className='absolute 
+          w-[340px]
+        
+
+          
+          
+          flex items-center justify-between
+          bottom-10 
+          left-1/2 transform -translate-x-1/2
+          bg-darkGrey rounded-xl shadow-lg p-4'
+        >
+          <LinkIcon />
+          <p
+            className='text-sm text-white 
+          text-center
+          '
+          >
+            The link has been copied to your clipboard!
+          </p>
         </div>
       )}
     </header>

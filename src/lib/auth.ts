@@ -1,5 +1,5 @@
 import { db } from './db';
-import { NextAuthOptions, User, getServerSession } from 'next-auth';
+import { NextAuthOptions, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 
@@ -38,7 +38,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         const validatedCredentials = loginUserSchema.parse(credentials);
 
-        const user = await db.user.findUniqueOrThrow({
+        const user = await db.user.findUnique({
           where: {
             email: validatedCredentials?.email,
           },
@@ -93,13 +93,11 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      // console.log('session', session);
       return {
         ...session,
         user: {
           ...session.user,
           id: token.id,
-          username: token.username,
           image: token.image,
         },
       };
