@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { PrismaClient } from '@prisma/client';
+const db = new PrismaClient();
 
 const registerUserSchema = z.object({
   email: z
