@@ -113,7 +113,7 @@ export const authOptions: NextAuthOptions = {
     signIn: '/login',
   },
 
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.SECRET,
 };
 
 export const getAuthSession = () => getServerSession(authOptions);
