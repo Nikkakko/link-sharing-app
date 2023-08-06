@@ -8,7 +8,7 @@ export default function AuthLayout({
   return (
     <div className='p-8 w-screen h-screen'>
       <AuthHeader />
-      <main className='mt-16 flex flex-col'>{children}</main>
+      <main className='mt-12 flex flex-col'>{children}</main>
     </div>
   );
 }

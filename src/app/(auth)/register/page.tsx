@@ -6,17 +6,13 @@ import { iconemail, iconpassword } from '../../../../public/assets/images';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
-import { useRouter } from 'next/navigation';
-
 const LoginPage = () => {
-  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
 
     const data = {
       email: form.get('email') as string,
-      username: form.get('username') as string,
       password: form.get('password') as string,
       confirmPassword: form.get('confirm-password') as string,
     };
@@ -39,7 +35,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className=''>
+    <>
       <div className='flex flex-col gap2'>
         <h1 className='text-darkGrey text-2xl font-bold'>Create account</h1>
         <p className='text-customGrey text-base font-normal leading-normal'>
@@ -56,19 +52,6 @@ const LoginPage = () => {
             placeholder='e.g. alex@email.com'
             className='w-full px-10'
             label='Email address'
-            icon={iconemail}
-          />
-        </div>
-
-        <div>
-          <Input
-            type='text'
-            id='username'
-            name='username'
-            placeholder='Enter your name'
-            className='w-full px-10'
-            label='Username'
-            autoComplete='username'
             icon={iconemail}
           />
         </div>
@@ -125,7 +108,7 @@ const LoginPage = () => {
           </Button>
         </div>
       </form>
-    </div>
+    </>
   );
 };
 
