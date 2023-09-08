@@ -1,6 +1,8 @@
 # This is a Link Sharing App
 
-![Live-Preview](https://link-sharing-app-nine.vercel.app/)
+<!-- Add Live Link -->
+
+![Live Link](https://link-sharing-app-nine.vercel.app/)
 
 ## Used Technologies
 
