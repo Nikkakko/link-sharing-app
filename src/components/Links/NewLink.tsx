@@ -31,14 +31,6 @@ import { cn } from '@/lib/utils';
 import { deleteLink, saveLinks } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../ui/use-toast';
-import { Pointer } from 'lucide-react';
-
-type linkProps = {
-  id: string;
-
-  platform: string;
-  url: string;
-};
 
 type Props = {
   link: {

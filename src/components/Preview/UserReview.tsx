@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import ReviewCard from './ReviewCard';
 import { useUser } from '@clerk/nextjs';
 import qs from 'query-string';
+import CryptoJS from 'crypto-js';
 import { useRouter, usePathname } from 'next/navigation';
 
 import { Prisma, User } from '@prisma/client';
@@ -26,6 +27,8 @@ const UserReview = ({ links, currentUser }: Props) => {
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
   const pathname = usePathname();
+
+  const encryptionKey = process.env.NEXT_PUBLIC_ENCRYPTION_KEY as string;
 
   const Skeleton = () => {
     //animate skeleton loader
@@ -51,8 +54,14 @@ const UserReview = ({ links, currentUser }: Props) => {
 
   useEffect(() => {
     const query = {
-      id: encodeURIComponent(currentUser?.id as string),
-      email: encodeURIComponent(currentUser?.email as string),
+      id: CryptoJS.AES.encrypt(
+        currentUser?.userId as string,
+        encryptionKey
+      ).toString(),
+      email: CryptoJS.AES.encrypt(
+        currentUser?.email as string,
+        encryptionKey
+      ).toString(),
     };
 
     const url = qs.stringifyUrl(
