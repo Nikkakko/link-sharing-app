@@ -72,7 +72,7 @@ const MainHeader = () => {
           <Button
             className='py-[11px] px-[27px] w-[160px] h-[46px]'
             variant='outline'
-            onClick={() => router.back()}
+            onClick={() => router.push('/profile-details')}
           >
             Back to Editor
           </Button>

@@ -4,14 +4,27 @@ import { auth, currentUser } from '@clerk/nextjs';
 
 import React from 'react';
 
-const PreviewPage = async () => {
+type Props = {
+  searchParams: {
+    id: string;
+    email: string;
+  };
+};
+
+const PreviewPage = async ({ searchParams }: Props) => {
   const { userId } = auth();
   const user = await currentUser();
 
+  console.log(searchParams);
+
+  const checkSearchParamsID = searchParams.id !== undefined || null;
+  const checkSearchParamsEmail = searchParams.email !== undefined || null;
+
   const currentUserDb = await db.user.findUnique({
     where: {
-      email: user?.emailAddresses[0].emailAddress as string,
-      userId: userId as string,
+      userId: (userId as string) || searchParams.id,
+      email:
+        (user?.emailAddresses[0].emailAddress as string) || searchParams.email,
     },
   });
 
@@ -20,8 +33,6 @@ const PreviewPage = async () => {
       userId: currentUserDb?.id,
     },
   });
-
-  console.log(dbLinks);
 
   return (
     <div className='flex flex-col flex-1'>

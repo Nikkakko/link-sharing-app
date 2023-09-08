@@ -1,10 +1,11 @@
 'use client';
-import { useLinkStore, useProfileStore } from '@/context/store';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReviewCard from './ReviewCard';
 import { useUser } from '@clerk/nextjs';
+import qs from 'query-string';
+import { useRouter, usePathname } from 'next/navigation';
+
 import { Prisma, User } from '@prisma/client';
 
 type Props = {
@@ -23,6 +24,8 @@ type Props = {
 };
 const UserReview = ({ links, currentUser }: Props) => {
   const { isLoaded, isSignedIn, user } = useUser();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const Skeleton = () => {
     //animate skeleton loader
@@ -46,6 +49,26 @@ const UserReview = ({ links, currentUser }: Props) => {
     );
   };
 
+  useEffect(() => {
+    const query = {
+      id: encodeURIComponent(currentUser?.id as string),
+      email: encodeURIComponent(currentUser?.email as string),
+    };
+
+    const url = qs.stringifyUrl(
+      {
+        url: window.location.href,
+        query,
+      },
+      {
+        skipEmptyString: true,
+        skipNull: true,
+      }
+    );
+
+    router.push(url);
+  }, [router, pathname]);
+
   return (
     <div className='flex flex-col w-[237px] mx-auto'>
       <div className='flex flex-col items-center text-center'>
@@ -55,6 +78,7 @@ const UserReview = ({ links, currentUser }: Props) => {
             alt='user profile'
             width={104}
             height={104}
+            sizes='104px'
             blurDataURL={currentUser?.image || user?.imageUrl}
             priority
             className='rounded-full border-2 border-violet-600 w-[104px] h-[104px]
