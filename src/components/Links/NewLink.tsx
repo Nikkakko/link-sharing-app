@@ -3,7 +3,6 @@ import { DragAndDropIcon } from '@/svgs/icons';
 import React, { useImperativeHandle, useContext, useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
-import { useLinkStore } from '@/context/store';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { listArray } from '@/utils/links';

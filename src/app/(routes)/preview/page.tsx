@@ -22,9 +22,9 @@ const PreviewPage = async ({ searchParams }: Props) => {
 
   const currentUserDb = await db.user.findUnique({
     where: {
-      userId: (userId as string) || searchParams.id,
+      userId: searchParams.id || (userId as string),
       email:
-        (user?.emailAddresses[0].emailAddress as string) || searchParams.email,
+        searchParams.email || (user?.emailAddresses[0].emailAddress as string),
     },
   });
 
