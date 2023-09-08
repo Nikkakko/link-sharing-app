@@ -54,10 +54,6 @@ const UserReview = ({ links, currentUser }: Props) => {
 
   useEffect(() => {
     const query = {
-      id: CryptoJS.AES.encrypt(
-        currentUser?.userId as string,
-        encryptionKey
-      ).toString(),
       email: CryptoJS.AES.encrypt(
         currentUser?.email as string,
         encryptionKey

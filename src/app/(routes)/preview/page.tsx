@@ -7,7 +7,6 @@ import React from 'react';
 
 type Props = {
   searchParams: {
-    id: string;
     email: string;
   };
 };
