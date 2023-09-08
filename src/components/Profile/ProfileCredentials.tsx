@@ -1,96 +1,149 @@
 'use client';
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { Input } from '../ui/Input';
-import { useProfileStore } from '@/context/store';
 import { RefContext } from '@/context/RefContext';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useSession } from 'next-auth/react';
+import PictureUpload from '@/components/Profile/PictureUpload';
+import { profileSchema } from '@/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form';
+import * as z from 'zod';
+import { User } from '@prisma/client';
+import { updateProfileDetails } from '@/lib/actions';
+import { useRouter } from 'next/navigation';
+import { useToast } from '../ui/use-toast';
 
-interface IFormInputs {
-  firstName: string;
-  lastName: string;
-  email: string;
+interface initialDataProps {
+  initialData: User | null;
 }
 
-const ProfileCredentials = () => {
-  const { data: session, update } = useSession();
-  const { setProfileInfo, profileInfo } = useProfileStore();
+const ProfileCredentials = ({ initialData }: initialDataProps) => {
   const { profileRef } = useContext(RefContext);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IFormInputs>({
-    defaultValues: {
-      firstName: '' || profileInfo.firstName,
-      lastName: '' || profileInfo.lastName,
-      email: session?.user?.email,
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const form = useForm<z.infer<typeof profileSchema>>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: initialData || {
+      firstName: '',
+      lastName: '',
+      email: '',
+      image: '',
     },
   });
 
-  const onSubmit: SubmitHandler<IFormInputs> = data => {
-    setProfileInfo(data.firstName, data.lastName, data.email);
-  };
+  const isLoading = form.formState.isSubmitting;
+
+  async function onSubmit(values: z.infer<typeof profileSchema>) {
+    try {
+      updateProfileDetails(
+        values.firstName,
+        values.lastName,
+        values.email,
+        values.image
+      );
+
+      toast({
+        title: 'Profile Updated!',
+        description: 'Redirecting to preview page.',
+      });
+      router.push('/preview');
+    } catch (error) {
+      toast({
+        title: 'Error!',
+        description: 'Something went wrong. Please try again.',
+      });
+    }
+  }
 
   useImperativeHandle(profileRef, () => ({
     handleUpdate: () => {
-      handleSubmit(onSubmit)();
+      form.handleSubmit(onSubmit)();
     },
   }));
 
   return (
-    <form className='flex flex-col gap-4'>
-      <Input
-        placeholder='First Name'
-        className='w-full h-10 px-4 py-2 '
-        label='First Name'
-        {...register('firstName', {
-          required: {
-            value: true,
-            message: 'Can’t be empty',
-          },
-          pattern: {
-            value: /^[A-Za-z]+$/i,
-            message: 'Can only contain letters',
-          },
-        })}
-        error={errors.firstName?.message}
-      />
+    <Form {...form}>
+      <form className='flex flex-col gap-4'>
+        <div className=' p-[20px] rounded-xl bg-neutral-50'>
+          <FormField
+            control={form.control}
+            name='image'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Upload Image</FormLabel>
+                <FormControl>
+                  <PictureUpload
+                    onChange={field.onChange}
+                    value={field.value}
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Upload a profile picture to personalize your profile.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-      <Input
-        placeholder='Last Name'
-        className='w-full h-10 px-4 py-2 '
-        label='Last Name'
-        {...register('lastName', {
-          required: {
-            value: true,
-            message: 'Can’t be empty',
-          },
-          pattern: {
-            value: /^[A-Za-z]+$/i,
-            message: 'Can only contain letters',
-          },
-        })}
-        error={errors.lastName?.message}
-      />
+        <FormField
+          control={form.control}
+          name='firstName'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>First Name</FormLabel>
+              <FormControl>
+                <Input placeholder='First Name' className='px-4' {...field} />
+              </FormControl>
 
-      <Input
-        placeholder='Email'
-        className='w-full h-10 px-4 py-2 '
-        label='Email'
-        {...register('email', {
-          required: {
-            value: true,
-            message: 'Can’t be empty',
-          },
-          pattern: {
-            value: /\S+@\S+\.\S+/,
-            message: 'Please enter a valid email',
-          },
-        })}
-        error={errors.email?.message}
-      />
-    </form>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='lastName'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Name</FormLabel>
+              <FormControl>
+                <Input placeholder='Last Name' className='px-4' {...field} />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='email'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder='Enter Your Email Address.'
+                  className='px-4'
+                  {...field}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
   );
 };
 

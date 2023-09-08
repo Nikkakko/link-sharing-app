@@ -6,15 +6,14 @@ import React from 'react';
 
 type Props = {
   link: {
-    id: number;
-    title: string;
+    id: string;
     platform: string;
-    url: string;
+    link: string;
   };
 };
 
 const ReviewCard = ({ link }: Props) => {
-  const { platform, url } = link;
+  const { platform, link: url } = link;
 
   const router = useRouter();
 

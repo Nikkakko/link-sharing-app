@@ -15,7 +15,7 @@ export default function HomeLayout({
       <MainHeader />
 
       <main className='p-4 flex flex-col flex-1'>{children}</main>
-      {pathname !== '/home/preview' && <Footer />}
+      {pathname !== '/preview' && <Footer />}
     </div>
   );
 }

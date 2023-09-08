@@ -1,13 +1,18 @@
 'use client';
 import React, { useState } from 'react';
-import { LinkIcon, PreviewIcon, ProfileIcon, DevlinksIcon } from '@/svgs/icons';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/Button';
+import { Link as LinkIcon, User, Link2, Eye } from 'lucide-react';
+import { UserButton } from '@clerk/nextjs';
+import Link from 'next/link';
+import { cn } from '@/utils';
+import { useToast } from '../ui/use-toast';
 
 const MainHeader = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [copied, setCopied] = useState(false);
 
@@ -16,45 +21,47 @@ const MainHeader = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
 
-    //remove copied message after 3 seconds
+    toast({
+      title: 'Copied!',
+      description: 'Link copied to clipboard',
+      duration: 1500,
+      className: 'top-16 md:top-0',
+    });
+
     setTimeout(() => {
       setCopied(false);
-    }, 3000);
+    }, 2000);
   };
 
-  const isPreview = pathname === '/home/preview';
-
-  const activeClass = {
-    isActive: 'w-[74px] h-[42px] bg-violet-100 rounded-lg cursor-pointer   ',
-    notActive: 'cursor-pointer w-[74px] h-[42px]     ',
-  };
+  const isPreview = pathname === '/preview';
 
   const links = [
     {
-      id: 0,
-      url: '/',
-      icon: <DevlinksIcon fill={pathname === '/' ? '' : 'bg-primary'} />,
-    },
-    {
       id: 1,
-      url: '/home',
-      icon: <LinkIcon fill={pathname === '/home' ? '#633CFF' : ''} />,
+      url: '/',
+      Icon: (
+        <LinkIcon
+          className={cn(pathname === '/' ? 'text-[#633CFF]' : 'text-darkGrey')}
+        />
+      ),
     },
 
     {
       id: 2,
-      url: '/home/profile-details',
-      icon: (
-        <ProfileIcon
-          fill={pathname === '/home/profile-details' ? '#633CFF' : ''}
+      url: '/profile-details',
+      Icon: (
+        <User
+          className={cn(
+            pathname === '/profile-details' ? 'text-[#633CFF]' : 'text-darkGrey'
+          )}
         />
       ),
     },
 
     {
       id: 3,
-      url: '/home/preview',
-      icon: <PreviewIcon isActive={pathname === '/home/preview'} />,
+      url: '/preview',
+      Icon: <Eye />,
     },
   ];
 
@@ -79,45 +86,18 @@ const MainHeader = () => {
         </div>
       ) : (
         <div className='flex items-center justify-between'>
-          {links.map((link, index) => (
-            <div
-              key={link.id}
-              className={`${
-                pathname === link.url
-                  ? activeClass.isActive
-                  : activeClass.notActive
-              }
-              flex items-center justify-center 
-              `}
-              onClick={() => router.push(link.url)}
-            >
-              {link.icon}
-            </div>
+          <Link2
+            className='bg-[#633CFF] text-white rounded-lg cursor-pointer p-1'
+            onClick={() => router.push('/')}
+            size={32}
+          />
+
+          {links.map(link => (
+            <Link key={link.id} href={link.url}>
+              {link.Icon}
+            </Link>
           ))}
-        </div>
-      )}
-
-      {copied && (
-        <div
-          className='absolute 
-          w-[340px]
-        
-
-          
-          
-          flex items-center justify-between
-          bottom-10 
-          left-1/2 transform -translate-x-1/2
-          bg-darkGrey rounded-xl shadow-lg p-4'
-        >
-          <LinkIcon />
-          <p
-            className='text-sm text-white 
-          text-center
-          '
-          >
-            The link has been copied to your clipboard!
-          </p>
+          <UserButton afterSignOutUrl='/sign-in' />
         </div>
       )}
     </header>

@@ -29,11 +29,11 @@ const Footer = () => {
   };
 
   const handleSave = () => {
-    if (pathname === '/home') {
+    if (pathname === '/') {
       handleUpdateNewLink();
     }
 
-    if (pathname === '/home/profile-details') {
+    if (pathname === '/profile-details') {
       handleCredentials();
     }
   };

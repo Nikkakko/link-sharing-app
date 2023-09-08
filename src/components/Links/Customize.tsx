@@ -1,13 +1,22 @@
 'use client';
-import React from 'react';
 import { Button } from '../ui/Button';
 import CustomizeBanner from './CustomizeBanner';
-import { useLinkStore } from '@/context/store';
 import NewLink from './NewLink';
+import { addNewLink } from '@/lib/actions';
+import React, { useState } from 'react';
 
-const Customize = () => {
-  const { links, setLinks, updateLink } = useLinkStore(state => state);
+type Props = {
+  links: {
+    id: string;
+    platform: string;
+    link: string;
+    userId: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+};
 
+const Customize = ({ links }: Props) => {
   return (
     <div className='flex flex-col'>
       <div className='flex flex-col'>
@@ -24,7 +33,7 @@ const Customize = () => {
         <Button
           variant='outline'
           className='rounded-lg mt-[40px]'
-          onClick={setLinks}
+          onClick={() => addNewLink()}
         >
           + Add New Link
         </Button>

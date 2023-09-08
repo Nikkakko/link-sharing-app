@@ -1,39 +1,12 @@
-'use client';
 import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { iconemail, iconpassword } from '../../../../public/assets/images';
+import { iconemail, iconpassword } from '../../../../../public/assets/images';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
+import { SignUp } from '@clerk/nextjs';
 
 const LoginPage = () => {
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-
-    const data = {
-      email: form.get('email') as string,
-      password: form.get('password') as string,
-      confirmPassword: form.get('confirm-password') as string,
-    };
-
-    try {
-      const response = await axios.post('/api/register', data);
-
-      if (response.status === 200) {
-        //sign in the user if response is successful
-        await signIn('credentials', {
-          email: data.email,
-          password: data.password,
-          callbackUrl: '/',
-          redirect: true,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <>
       <div className='flex flex-col gap2'>
@@ -43,8 +16,8 @@ const LoginPage = () => {
         </p>
       </div>
 
-      <form className='flex flex-col gap-6 mt-6' onSubmit={handleSubmit}>
-        <div>
+      <form className='flex flex-col gap-6 mt-6'>
+        {/* <div>
           <Input
             type='email'
             id='email'
@@ -106,7 +79,8 @@ const LoginPage = () => {
           >
             Login
           </Button>
-        </div>
+        </div> */}
+        <SignUp />
       </form>
     </>
   );

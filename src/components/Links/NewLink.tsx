@@ -1,139 +1,186 @@
 'use client';
-import { ChevronDownIcon, DragAndDropIcon } from '@/svgs/icons';
-import React, { useImperativeHandle, useContext } from 'react';
+import { DragAndDropIcon } from '@/svgs/icons';
+import React, { useImperativeHandle, useContext, useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { useLinkStore } from '@/context/store';
-import { useForm, SubmitHandler } from 'react-hook-form';
-
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { listArray } from '@/utils/links';
 import { RefContext } from '@/context/RefContext';
-import DropdownMenu from '../ui/DropdownMenu';
 
-interface IFormInputs {
-  url: string;
-}
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form';
+import * as z from 'zod';
+import { linkSchema } from '@/schemas';
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import { cn } from '@/lib/utils';
+import { deleteLink, saveLinks } from '@/lib/actions';
+import { useRouter } from 'next/navigation';
+import { useToast } from '../ui/use-toast';
+import { Pointer } from 'lucide-react';
 
 type linkProps = {
-  id: number;
-  title: string;
+  id: string;
+
   platform: string;
   url: string;
 };
 
 type Props = {
-  link: linkProps;
+  link: {
+    id: string;
+    platform: string;
+    link: string;
+  };
 };
 
 const NewLink = ({ link }: Props) => {
-  const { removeLink, links, updateLink } = useLinkStore(state => state);
-  const [updatedLink, setUpdatedLink] = React.useState({
-    platform: link.platform,
-    url: link.url,
-  });
-  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
-  const dropdownRef = React.useRef<HTMLDivElement>(null);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IFormInputs>({
+  const router = useRouter();
+  const { toast } = useToast();
+  const { newLinkRef } = useContext(RefContext);
+
+  const form = useForm<z.infer<typeof linkSchema>>({
+    resolver: zodResolver(linkSchema),
     defaultValues: {
-      url: link.url,
+      platform: link.platform || '',
+      url: link.link || '',
     },
   });
-  const onSubmit: SubmitHandler<IFormInputs> = data => {
-    updateLink(link.id, updatedLink.platform, data.url);
-  };
 
-  const { newLinkRef } = useContext(RefContext);
+  const onSubmit = async (values: z.infer<typeof linkSchema>) => {
+    try {
+      saveLinks(link.id, values.platform, values.url);
+
+      toast({
+        title: 'Link Successfully Saved',
+        description: 'Redirecting to profile details page',
+      });
+      router.push('/profile-details');
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong',
+      });
+    }
+  };
 
   //use useImperativeHandle to expose a function to parent component
   useImperativeHandle(newLinkRef, () => ({
     handleUpdate: () => {
-      handleSubmit(onSubmit)();
+      form.handleSubmit(onSubmit)();
     },
   }));
 
-  //close dropdown when clicked outside
-  const handleClickOutside = (e: any) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-      setIsDropdownOpen(false);
-    }
-  };
-
   return (
-    <div
-      className='p-5 bg-neutral-50 rounded-xl border flex-col justify-center items-center gap-3 inline-flex'
-      onClick={handleClickOutside}
-    >
+    <div className='p-5 bg-neutral-50 rounded-xl border flex-col justify-center items-center gap-3 inline-flex'>
       <div className='flex flex-col items-start gap-4 w-full '>
         <div className='flex items-center justify-between w-full '>
           <div className='flex items-center gap-2'>
             <DragAndDropIcon />
             <h3 className='text-neutral-500 text-base font-bold leading-normal"'>
-              {link.title}
+              Link
             </h3>
           </div>
           <Button
             variant='destructive'
             className='p-0 h-6'
-            onClick={() => removeLink(link.id)}
+            onClick={() => {
+              deleteLink(link.id);
+            }}
           >
             Remove
           </Button>
         </div>
 
-        <div className='flex flex-col items-start relative' ref={dropdownRef}>
-          <label className='text-darkGrey text-xs font-normal leading-[18px]'>
-            Platform
-          </label>
-          <div
-            className='w-[255px] h-12 px-4 py-3 bg-white rounded-lg border border-zinc-300 flex justify-between items-center gap-3 '
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            <div className='flex items-center gap-2'>
-              {
-                listArray.find(item => item.title === updatedLink.platform)
-                  ?.icon
-              }
-              {updatedLink.platform}
-            </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name='platform'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-darkGrey text-xs font-normal'>
+                    Platform
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder='select a platform text-red-500'
+                          className='text-red-500'
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {listArray.map(item => (
+                        <SelectItem key={item.title} value={item.title}>
+                          <div className='flex items-center gap-2'>
+                            <div
+                              className={cn(
+                                `w-7 h-7 
+                                flex items-center justify-center
+                                text-white rounded-lg
+                                `
+                              )}
+                            >
+                              {item.icon}
+                            </div>
+                            {item.title}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-            <ChevronDownIcon
-              className={`${
-                isDropdownOpen ? 'transform rotate-180' : ''
-              } cursor-pointer`}
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          {isDropdownOpen && (
-            <DropdownMenu
-              setUpdatedLink={setUpdatedLink}
-              closeDropdown={() => setIsDropdownOpen(false)}
+            <FormField
+              control={form.control}
+              name='url'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-darkGrey text-xs font-normal'>
+                    Link
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className='w-[255px]
+                        placeholder-gray-400
+                        pl-4
+                       
+                      '
+                      placeholder='e.g. https://www.github.com/username
+                      '
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          )}
-        </div>
-        <form>
-          <label className='text-darkGrey text-xs font-normal leading-[18px]'>
-            Link
-          </label>
-          <Input
-            className='w-[255px] px-4 py-3 '
-            placeholder='e.g. https://www.github.com/johnappleseed'
-            {...register('url', {
-              required: {
-                value: true,
-                message: 'Can’t be empty',
-              },
-              pattern: {
-                value: /https?:\/\/[\w\-_]+(\.[\w\-_]+)+[/#?]?.*$/,
-                message: 'Please enter a valid URL',
-              },
-            })}
-            error={errors.url?.message}
-          />
-        </form>
+          </form>
+        </Form>
       </div>
     </div>
   );

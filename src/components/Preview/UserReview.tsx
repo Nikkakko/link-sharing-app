@@ -4,11 +4,25 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
 import ReviewCard from './ReviewCard';
+import { useUser } from '@clerk/nextjs';
+import { Prisma, User } from '@prisma/client';
 
-const UserReview = () => {
-  const { data: session } = useSession();
-  const { profileInfo } = useProfileStore();
-  const { links } = useLinkStore();
+type Props = {
+  links:
+    | {
+        id: string;
+        platform: string;
+        link: string;
+        userId: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }[]
+    | null;
+
+  currentUser: User | null;
+};
+const UserReview = ({ links, currentUser }: Props) => {
+  const { isLoaded, isSignedIn, user } = useUser();
 
   const Skeleton = () => {
     //animate skeleton loader
@@ -35,13 +49,13 @@ const UserReview = () => {
   return (
     <div className='flex flex-col w-[237px] mx-auto'>
       <div className='flex flex-col items-center text-center'>
-        {session?.user?.image ? (
+        {currentUser?.image ? (
           <Image
-            src={session?.user?.image as string}
+            src={currentUser?.image || (user?.imageUrl as string)}
             alt='user profile'
             width={104}
             height={104}
-            blurDataURL={session?.user?.image as string}
+            blurDataURL={currentUser?.image || user?.imageUrl}
             priority
             className='rounded-full border-2 border-violet-600 w-[104px] h-[104px]
         object-fill object-center'
@@ -51,16 +65,16 @@ const UserReview = () => {
         )}
 
         <div className='mt-[25px] flex flex-col gap-2'>
-          {profileInfo?.firstName && profileInfo.lastName ? (
+          {currentUser?.firstName && currentUser.lastName ? (
             <>
               <h1
                 className='text-darkGrey text-[32px] font-bold leading-[48px] capitalize 
             max-w-[250px] 
             '
               >
-                {profileInfo.firstName} {profileInfo.lastName}
+                {currentUser.firstName} {currentUser.lastName}
               </h1>
-              <p className='text-sm text-neutral-500'>{profileInfo.email}</p>
+              <p className='text-sm text-neutral-500'>{currentUser.email}</p>
             </>
           ) : (
             <Skeleton />
@@ -70,7 +84,7 @@ const UserReview = () => {
 
       <div className='mt-12 flex flex-col gap-5'>
         {links?.map(link => (
-          <ReviewCard link={link} key={link.id} />
+          <ReviewCard link={link} key={link?.id} />
         ))}
       </div>
     </div>

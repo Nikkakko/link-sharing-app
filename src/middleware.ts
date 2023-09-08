@@ -1,30 +1,10 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { authMiddleware } from '@clerk/nextjs';
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
+// This example protects all routes including api/trpc routes
+// Please edit this to allow other routes to be public as needed.
+// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
+export default authMiddleware({});
 
-  const isPublicPath = path === '/login' || path === '/register';
-
-  const token = request.cookies.get('next-auth.session-token')?.value || '';
-
-  if (!isPublicPath && !token) {
-    return NextResponse.redirect(new URL('/login', request.nextUrl));
-  }
-
-  if (isPublicPath && token) {
-    return NextResponse.redirect(new URL('/home', request.nextUrl));
-  }
-
-  if (path === '/' && token) {
-    return NextResponse.redirect(new URL('/home', request.nextUrl));
-  }
-
-  return NextResponse.next();
-}
-
-// See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/', '/home', '/login', '/register'],
+  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
 };

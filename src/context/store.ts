@@ -1,16 +1,19 @@
+import { db } from '@/lib/db';
 import { create } from 'zustand';
+import { auth } from '@clerk/nextjs';
+import { uuid } from 'uuidv4';
 
 export interface LinkStore {
   links: {
-    id: number;
-    title: string;
+    id: string;
+
     platform: string;
     url: string;
   }[];
 
   setLinks: () => void;
-  removeLink: (id: number) => void;
-  updateLink: (id: number, platform: string, url: string) => void;
+  removeLink: (id: string) => void;
+  updateLink: (id: string, platform: string, url: string) => void;
 }
 
 export interface ProfileStore {
@@ -31,15 +34,14 @@ export const useLinkStore = create<LinkStore>(set => ({
       links: [
         ...state.links,
         {
-          id: state.links.length + 1,
-          title: `Link #${state.links.length + 1}`,
+          id: uuid(),
           platform: '',
           url: '',
         },
       ],
     })),
 
-  updateLink: (id: number, platform: string, url: string) =>
+  updateLink: (id: string, platform: string, url: string) =>
     set(state => ({
       //find the link with the id
       links: state.links.map(link => {
@@ -51,7 +53,7 @@ export const useLinkStore = create<LinkStore>(set => ({
       }),
     })),
 
-  removeLink: (id: number) =>
+  removeLink: (id: string) =>
     set(state => ({
       links: state.links.filter(link => link.id !== id),
     })),
