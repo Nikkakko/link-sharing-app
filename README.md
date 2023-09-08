@@ -1,9 +1,5 @@
 # This is a Link Sharing App
 
-<!-- Add Live Link -->
-
-![Live Link](https://link-sharing-app-nine.vercel.app/)
-
 ## Used Technologies
 
 - React
