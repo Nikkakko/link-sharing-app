@@ -8,6 +8,7 @@ import { UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { cn } from '@/utils';
 import { useToast } from '../ui/use-toast';
+import { ArrowLeft, Share } from 'lucide-react';
 
 const MainHeader = () => {
   const pathname = usePathname();
@@ -66,21 +67,14 @@ const MainHeader = () => {
   ];
 
   return (
-    <header className='pl-6 py-4 pr-4 h-[74px] bg-white'>
+    <header className='h-[74px] container py-6 px-auto bg-background shadow-sn'>
       {isPreview ? (
-        <div className='flex items-center justify-between'>
-          <Button
-            className='py-[11px] px-[27px] w-[160px] h-[46px]'
-            variant='outline'
-            onClick={() => router.push('/profile-details')}
-          >
-            Back to Editor
+        <div className='flex items-center justify-between '>
+          <Button variant='link' href='/profile-details'>
+            <ArrowLeft className='mr-2' />
           </Button>
-          <Button
-            className='py-[11px] px-[27px] w-[160px] h-[46px]'
-            variant='primary'
-            onClick={handleShareLink}
-          >
+          <Button variant='primary' onClick={handleShareLink}>
+            <Share className='mr-2' />
             {copied ? 'Copied!' : 'Share Link'}
           </Button>
         </div>

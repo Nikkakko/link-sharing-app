@@ -21,7 +21,11 @@ const ImageUpload = ({ value, onChange, disabled = false }: Props) => {
   }
 
   return (
-    <div className='sapce-y-4  flex flex-col justify-center items-center bg-background'>
+    <div
+      className='sapce-y-4  flex flex-col justify-center items-center bg-background
+    max-w-[400px] w-full rounded-lg p-4 
+    '
+    >
       <CldUploadButton
         onUpload={(result: any) => {
           onChange(result.info.secure_url);

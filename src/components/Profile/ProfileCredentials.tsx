@@ -72,8 +72,12 @@ const ProfileCredentials = ({ initialData }: initialDataProps) => {
 
   return (
     <Form {...form}>
-      <form className='flex flex-col gap-4'>
-        <div className=' p-[20px] rounded-xl bg-neutral-50'>
+      <form
+        className='flex flex-col gap-4
+         justify-center items-center
+      '
+      >
+        <div className=' p-[20px] rounded-xl bg-neutral-50 items-center flex justify-center'>
           <FormField
             control={form.control}
             name='image'

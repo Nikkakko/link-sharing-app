@@ -12,7 +12,6 @@ type Props = {
 };
 
 const PreviewPage = async ({ searchParams }: Props) => {
-  const { userId } = auth();
   const user = await currentUser();
 
   const decryptedBytes = CryptoJS.AES.decrypt(

@@ -41,7 +41,7 @@ const HomePage = async () => {
   }
 
   return (
-    <div className='p-6 bg-white rounded-md shadow-sm'>
+    <div className='p-6 bg-white rounded-md shadow-sm '>
       <Customize links={link} />
     </div>
   );

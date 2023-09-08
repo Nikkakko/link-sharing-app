@@ -7,7 +7,7 @@ import qs from 'query-string';
 import CryptoJS from 'crypto-js';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { Prisma, User } from '@prisma/client';
+import { User } from '@prisma/client';
 
 type Props = {
   links:
@@ -24,7 +24,7 @@ type Props = {
   currentUser: User | null;
 };
 const UserReview = ({ links, currentUser }: Props) => {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { user } = useUser();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -75,8 +75,8 @@ const UserReview = ({ links, currentUser }: Props) => {
   }, [router, pathname]);
 
   return (
-    <div className='flex flex-col w-[237px] mx-auto'>
-      <div className='flex flex-col items-center text-center'>
+    <div className='flex flex-col w-[237px] mx-auto shadow-sm bg-background p-6'>
+      <div className='p-4  rounded-lg hover:opacity-75 transition flex flex-col space-y-2 items-center justify-center text-center'>
         {currentUser?.image ? (
           <Image
             src={currentUser?.image || (user?.imageUrl as string)}
@@ -111,7 +111,11 @@ const UserReview = ({ links, currentUser }: Props) => {
         </div>
       </div>
 
-      <div className='mt-12 flex flex-col gap-5'>
+      <div
+        className='mt-12 flex flex-col gap-5 cursor-pointer 
+        hover:opacity-75 transition
+      '
+      >
         {links?.map(link => (
           <ReviewCard link={link} key={link?.id} />
         ))}
