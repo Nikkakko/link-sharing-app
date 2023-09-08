@@ -28,7 +28,8 @@ const ReviewCard = ({ link }: Props) => {
   return (
     <div
       style={{ backgroundColor: cardItem?.bgColor }}
-      className={`p-4 rounded-lg flex flex-row justify-between items-center`}
+      className={`p-4 rounded-lg flex flex-row justify-between items-center cursor-pointer 
+      hover:opacity-75 transition-opacity`}
       onClick={handleClick}
     >
       <div className='flex flex-row items-center gap-2'>

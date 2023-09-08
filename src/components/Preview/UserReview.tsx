@@ -112,8 +112,7 @@ const UserReview = ({ links, currentUser }: Props) => {
       </div>
 
       <div
-        className='mt-12 flex flex-col gap-5 cursor-pointer 
-        hover:opacity-75 transition
+        className='mt-12 flex flex-col gap-5 
       '
       >
         {links?.map(link => (
