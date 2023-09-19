@@ -14,13 +14,17 @@ type Props = {
 const PreviewPage = async ({ searchParams }: Props) => {
   const user = await currentUser();
 
+  if (!user && searchParams.email === undefined) {
+    return null;
+  }
+
   const decryptedBytes = CryptoJS.AES.decrypt(
     searchParams.email || (user?.emailAddresses[0].emailAddress as string),
     process.env.NEXT_PUBLIC_ENCRYPTION_KEY as string
   );
   const decryptedEmail = decryptedBytes.toString(CryptoJS.enc.Utf8);
 
-  const currentUserDb = await db.user.findUnique({
+  const currentUserDb = await db.user?.findUnique({
     where: {
       email:
         (searchParams.email !== null && decryptedEmail) ||
